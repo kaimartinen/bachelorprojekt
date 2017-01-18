@@ -6,7 +6,7 @@
 
 class Point_Cloud_Publisher {
 public:
-  Point_Cloud_Publisher(ros::NodeHandle &node, std::string node_topic);
+  Point_Cloud_Publisher(ros::NodeHandle node, std::string node_topic);
   ~Point_Cloud_Publisher();
   void publish(const sensor_msgs::PointCloud cloud);
 

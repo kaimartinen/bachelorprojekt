@@ -4,7 +4,7 @@
 #include "sensor_msgs/PointCloud.h"
 #include "point_cloud_publisher.h"
 
-Point_Cloud_Publisher::Point_Cloud_Publisher(ros::NodeHandle &node, std::string node_topic) {
+Point_Cloud_Publisher::Point_Cloud_Publisher(ros::NodeHandle node, std::string node_topic) {
   _n = node;
   _topic = node_topic;
   _publisher = _n.advertise<sensor_msgs::PointCloud>("Laser_Point_Cloud", 1000);
@@ -20,6 +20,9 @@ void Point_Cloud_Publisher::publish(const sensor_msgs::PointCloud cloud) {
 }
 
 int main(int argc, char **argv  ) {
-  /* code */
-  return 0;
+  /*ros::init(argc, argv, "point_cloud_publisher");
+  ros::NodeHandle m;
+
+  Point_Cloud_Publisher publisher(m);
+  ros::spinOnce();*/
 }
