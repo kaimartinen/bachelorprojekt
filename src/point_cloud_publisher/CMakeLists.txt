@@ -104,7 +104,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES Point_Cloud_Publisher
+  LIBRARIES point_cloud_publisher
   CATKIN_DEPENDS roscpp rospy sensor_msgs std_msgs
   DEPENDS system_lib
 )
@@ -119,12 +119,14 @@ catkin_package(
 # include_directories(include)
 include_directories(
   ${catkin_INCLUDE_DIRS}
+  ${Boost_LIBRARIES}
+  ${GSTREAMER_LIBRARIES}
 )
 
 ## Declare a C++ library
-#add_library(Point_Cloud_Publisher
-#  src/${PROJECT_NAME}/Point_Cloud_Publisher.cpp
-#)
+add_library(point_cloud_publisher
+  src/${PROJECT_NAME}
+)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -138,18 +140,17 @@ include_directories(
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(point_cloud_publisher_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(point_cloud_publisher point_cloud_publisher_generate_messages_cpp)
+
 
 ## Specify libraries to link a library or executable target against
-#target_link_libraries(
-#  Point_Cloud_Publisher ${catkin_LIBRARIES}
-
-#)
-
-include_directories(include ${catkin_INCLUDE_DIRS})
-
-add_executable(Point_Cloud_Publisher_Node src/Point_Cloud_Publisher_Node.cpp)
-target_link_libraries(Point_Cloud_Publisher_Node ${catkin_LIBRARIES})
-add_dependencies(Point_Cloud_Publisher_Node point_cloud_publisher_generate_messages_cpp)
+target_link_libraries( point_cloud_publisher
+  ${catkin_LIBRARIES}
+  ${Boost_LIBRARIES}
+  ${GSTREAMER_LIBRARIES}
+)
+#add_executable(point_cloud_publisher src/point_cloud_publisher.cpp)
+#target_link_libraries(point_cloud_publisher ${catkin_LIBRARIES})
 
 
 add_definitions(-std=c++11)
@@ -157,6 +158,7 @@ add_definitions(-std=c++11)
 #############
 ## Install ##
 #############
+
 
 # all install targets should use catkin DESTINATION variables
 # See http://ros.org/doc/api/catkin/html/adv_user_guide/variables.html
@@ -169,18 +171,18 @@ add_definitions(-std=c++11)
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS point_cloud_publisher point_cloud_publisher_node
-#   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+install(TARGETS point_cloud_publisher
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 ## Mark cpp header files for installation
-# install(DIRECTORY include/${PROJECT_NAME}/
-#   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-#   FILES_MATCHING PATTERN "*.h"
-#   PATTERN ".svn" EXCLUDE
-# )
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.h"
+  PATTERN ".svn" EXCLUDE
+)
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES
