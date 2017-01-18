@@ -16,6 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
+find_package( point_cloud_publisher REQUIRED)
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -113,8 +114,8 @@ add_definitions(-std=c++11)
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
  INCLUDE_DIRS include
- LIBRARIES laser_scanner
- CATKIN_DEPENDS roscpp rospy std_msgs sensor_msgs message_generation laser_geometry point_cloud_publisher
+# LIBRARIES laser_scan
+ CATKIN_DEPENDS roscpp rospy std_msgs sensor_msgs
  DEPENDS system_lib
 )
 
@@ -147,9 +148,9 @@ include_directories(
 # add_dependencies(laser_scanner_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(laser_scanner_node
-#   ${catkin_LIBRARIES}
-# )
+#target_link_libraries(laser_scan
+#  ${catkin_LIBRARIES}
+#)
 
 #############
 ## Install ##
