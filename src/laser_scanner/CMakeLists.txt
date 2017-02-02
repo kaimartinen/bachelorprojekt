@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(laser_scan)
+project(laser_scanner)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   message_generation
   laser_geometry
+  laser_line_extraction
 )
 
 ## System dependencies are found with CMake's conventions
@@ -111,7 +112,7 @@ add_definitions(-std=c++11)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
- INCLUDE_DIRS include
+ INCLUDE_DIRS #include
 # LIBRARIES laser_scan
  CATKIN_DEPENDS roscpp rospy std_msgs sensor_msgs
  DEPENDS system_lib

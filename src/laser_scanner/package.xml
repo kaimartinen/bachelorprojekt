@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>laser_scan</name>
+  <name>laser_scanner</name>
   <version>0.0.0</version>
   <description>The laser_scan package</description>
 
