@@ -102,12 +102,12 @@ target_link_libraries(line ${catkin_LIBRARIES})
 add_library(line_extraction src/line_extraction.cpp)
 target_link_libraries(line_extraction ${catkin_LIBRARIES})
 
-add_library(line_extraction_ros src/line_extraction_ros.cpp)
-target_link_libraries(line_extraction_ros line line_extraction)
-add_dependencies(line_extraction_ros laser_line_extraction_generate_messages_cpp)
+add_library(laser_line_extraction src/line_extraction_ros.cpp)
+target_link_libraries(laser_line_extraction line line_extraction)
+add_dependencies(laser_line_extraction laser_line_extraction_generate_messages_cpp)
 
 add_executable(line_extraction_node src/line_extraction_node.cpp)
-target_link_libraries(line_extraction_node line_extraction_ros)
+target_link_libraries(line_extraction_node laser_line_extraction)
 
 #############
 ## Install ##

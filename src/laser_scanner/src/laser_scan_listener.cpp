@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
   ros::NodeHandle nh_local("~");
   line_extraction::LineExtractionROS line_extractor(nh, nh_local);
 
-  /*double frequency;
+  double frequency;
   nh_local.param<double>("frequency", frequency, 25);
   ros::Rate rate(frequency);
 
@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
     line_extractor.run();
     ros::spinOnce();
     rate.sleep();
-  }*/
+  }
 
   return 0;
 }

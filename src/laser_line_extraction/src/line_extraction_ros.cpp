@@ -15,8 +15,10 @@ LineExtractionROS::LineExtractionROS(ros::NodeHandle& nh, ros::NodeHandle& nh_lo
   data_cached_(false)
 {
   loadParameters();
+  ROS_INFO("%s\n", scan_topic_.c_str());
   line_publisher_ = nh_.advertise<laser_line_extraction::LineSegmentList>("line_segments", 1);
   scan_subscriber_ = nh_.subscribe(scan_topic_, 1, &LineExtractionROS::laserScanCallback, this);
+  pub_markers_ = true;
   if (pub_markers_)
   {
     marker_publisher_ = nh_.advertise<visualization_msgs::Marker>("line_markers", 1);
@@ -66,11 +68,11 @@ void LineExtractionROS::loadParameters()
   std::string frame_id, scan_topic;
   bool pub_markers;
 
-  nh_local_.param<std::string>("frame_id", frame_id, "laser");
+  nh_local_.param<std::string>("frame_id", frame_id, "base_laser_link");
   frame_id_ = frame_id;
   ROS_DEBUG("frame_id: %s", frame_id_.c_str());
 
-  nh_local_.param<std::string>("scan_topic", scan_topic, "scan");
+  nh_local_.param<std::string>("scan_topic", scan_topic, "base_scan");
   scan_topic_ = scan_topic;
   ROS_DEBUG("scan_topic: %s", scan_topic_.c_str());
 
@@ -158,8 +160,11 @@ void LineExtractionROS::populateMarkerMsg(const std::vector<Line> &lines,
   marker_msg.color.g = 0.0;
   marker_msg.color.b = 0.0;
   marker_msg.color.a = 1.0;
+  int i = 0;
   for (std::vector<Line>::const_iterator cit = lines.begin(); cit != lines.end(); ++cit)
   {
+    ROS_INFO("Line length: %lf\n", lines[i].length());
+    i++;
     geometry_msgs::Point p_start;
     p_start.x = cit->getStart()[0];
     p_start.y = cit->getStart()[1];
