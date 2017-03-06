@@ -23,7 +23,7 @@ public:
   // Data setting
   void setCachedData(const std::vector<double>&, const std::vector<double>&,
                      const std::vector<double>&, const std::vector<unsigned int>&);
-  void setRangeData(const std::vector<double>&);
+  void setRangeData(const std::vector<double>&, double min_range, double max_range);
   // Parameter setting
   void setBearingVariance(double);
   void setRangeVariance(double);

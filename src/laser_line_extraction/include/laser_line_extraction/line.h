@@ -12,6 +12,7 @@ class Line
 {
 
 public:
+  bool object_line_;
   // Constructor / destructor
   Line(const CachedData&, const RangeData&, const Params&, std::vector<unsigned int>);
   Line(double angle, double radius, const boost::array<double, 4> &covariance,
@@ -32,6 +33,8 @@ public:
   double       length() const;
   unsigned int numPoints() const;
   void         projectEndpoints();
+  double       ranges_max();
+  //double       getMaxRangeScan();
 
 private:
   std::vector<unsigned int> indices_;

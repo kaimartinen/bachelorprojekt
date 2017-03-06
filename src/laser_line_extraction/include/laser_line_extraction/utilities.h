@@ -20,6 +20,8 @@ struct RangeData
   std::vector<double> ranges;
   std::vector<double> xs;
   std::vector<double> ys;
+  double min_range;
+  double max_range;
 };
 
 struct Params

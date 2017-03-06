@@ -20,7 +20,7 @@ LineExtraction::~LineExtraction()
 ///////////////////////////////////////////////////////////////////////////////
 // Main run function
 ///////////////////////////////////////////////////////////////////////////////
-void LineExtraction::extractLines(std::vector<Line>& lines) 
+void LineExtraction::extractLines(std::vector<Line>& lines)
 {
   // Resets
   filtered_indices_ = c_data_.indices;
@@ -47,7 +47,18 @@ void LineExtraction::extractLines(std::vector<Line>& lines)
   }
   mergeLines();
 
-  lines = lines_;
+  std::vector<line_extraction::Line> corr_lines;
+
+  for(size_t i = 0; i < lines_.size(); ++i)
+  {
+    // noch dynamich auf max range des scans
+    //ROS_INFO("max range: %lf", lines_[i].ranges_max());
+    if ((int)lines_[i].ranges_max() >= 10) {
+      corr_lines.push_back(lines_[i]);
+    }
+  }
+
+  lines = corr_lines;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -64,12 +75,14 @@ void LineExtraction::setCachedData(const std::vector<double>& bearings,
   c_data_.indices = indices;
 }
 
-void LineExtraction::setRangeData(const std::vector<double>& ranges)
+void LineExtraction::setRangeData(const std::vector<double>& ranges, double min_range, double max_range)
 {
   r_data_.ranges = ranges;
+  r_data_.min_range = min_range;
+  r_data_.max_range = max_range;
   r_data_.xs.clear();
   r_data_.ys.clear();
-  for (std::vector<unsigned int>::const_iterator cit = c_data_.indices.begin(); 
+  for (std::vector<unsigned int>::const_iterator cit = c_data_.indices.begin();
        cit != c_data_.indices.end(); ++cit)
   {
     r_data_.xs.push_back(c_data_.cos_bearings[*cit] * ranges[*cit]);
@@ -130,6 +143,8 @@ void LineExtraction::setOutlierDist(double value)
   params_.outlier_dist = value;
 }
 
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // Utility methods
 ///////////////////////////////////////////////////////////////////////////////
@@ -141,7 +156,7 @@ double LineExtraction::chiSquared(const Eigen::Vector2d &dL, const Eigen::Matrix
 
 double LineExtraction::distBetweenPoints(unsigned int index_1, unsigned int index_2)
 {
-  return sqrt(pow(r_data_.xs[index_1] - r_data_.xs[index_2], 2) + 
+  return sqrt(pow(r_data_.xs[index_1] - r_data_.xs[index_2], 2) +
               pow(r_data_.ys[index_1] - r_data_.ys[index_2], 2));
 }
 
@@ -151,7 +166,7 @@ double LineExtraction::distBetweenPoints(unsigned int index_1, unsigned int inde
 void LineExtraction::filterClosePoints()
 {
   std::vector<unsigned int> output;
-  for (std::vector<unsigned int>::const_iterator cit = filtered_indices_.begin(); 
+  for (std::vector<unsigned int>::const_iterator cit = filtered_indices_.begin();
        cit != filtered_indices_.end(); ++cit)
   {
     if (r_data_.ranges[*cit] >= params_.min_range)
@@ -196,7 +211,7 @@ void LineExtraction::filterOutlierPoints()
     // Check if point is an outlier
 
     if (fabs(r_data_.ranges[p_i] - r_data_.ranges[p_j]) > params_.outlier_dist &&
-        fabs(r_data_.ranges[p_i] - r_data_.ranges[p_k]) > params_.outlier_dist) 
+        fabs(r_data_.ranges[p_i] - r_data_.ranges[p_k]) > params_.outlier_dist)
     {
       // Check if it is close to line connecting its neighbours
       std::vector<unsigned int> line_indices;

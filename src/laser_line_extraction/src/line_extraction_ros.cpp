@@ -15,7 +15,7 @@ LineExtractionROS::LineExtractionROS(ros::NodeHandle& nh, ros::NodeHandle& nh_lo
   data_cached_(false)
 {
   loadParameters();
-  ROS_INFO("%s\n", scan_topic_.c_str());
+  //ROS_INFO("%s\n", scan_topic_.c_str());
   line_publisher_ = nh_.advertise<laser_line_extraction::LineSegmentList>("line_segments", 1);
   scan_subscriber_ = nh_.subscribe(scan_topic_, 1, &LineExtractionROS::laserScanCallback, this);
   pub_markers_ = true;
@@ -52,6 +52,12 @@ void LineExtractionROS::run()
     populateMarkerMsg(lines, marker_msg);
     marker_publisher_.publish(marker_msg);
   }
+}
+
+void LineExtractionROS::extract(std::vector<Line> &lines)
+{
+  lines.clear();
+  line_extraction_.extractLines(lines);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -106,7 +112,8 @@ void LineExtractionROS::loadParameters()
   line_extraction_.setMaxLineGap(max_line_gap);
   ROS_DEBUG("max_line_gap: %f", max_line_gap);
 
-  nh_local_.param<double>("min_line_length", min_line_length, 0.5);
+  //0.5
+  nh_local_.param<double>("min_line_length", min_line_length, 0.1);
   line_extraction_.setMinLineLength(min_line_length);
   ROS_DEBUG("min_line_length: %f", min_line_length);
 
@@ -122,7 +129,8 @@ void LineExtractionROS::loadParameters()
   line_extraction_.setOutlierDist(outlier_dist);
   ROS_DEBUG("outlier_dist: %f", outlier_dist);
 
-  nh_local_.param<int>("min_line_points", min_line_points, 9);
+  //9
+  nh_local_.param<int>("min_line_points", min_line_points, 5);
   line_extraction_.setMinLinePoints(static_cast<unsigned int>(min_line_points));
   ROS_DEBUG("min_line_points: %d", min_line_points);
 
@@ -163,7 +171,7 @@ void LineExtractionROS::populateMarkerMsg(const std::vector<Line> &lines,
   int i = 0;
   for (std::vector<Line>::const_iterator cit = lines.begin(); cit != lines.end(); ++cit)
   {
-    ROS_INFO("Line length: %lf\n", lines[i].length());
+    //ROS_INFO("Line length: %lf\n", lines[i].length());
     i++;
     geometry_msgs::Point p_start;
     p_start.x = cit->getStart()[0];
@@ -211,8 +219,9 @@ void LineExtractionROS::laserScanCallback(const sensor_msgs::LaserScan::ConstPtr
     cacheData(scan_msg);
     data_cached_ = true;
   }
+
   std::vector<double> scan_ranges_doubles(scan_msg->ranges.begin(), scan_msg->ranges.end());
-  line_extraction_.setRangeData(scan_ranges_doubles);
+  line_extraction_.setRangeData(scan_ranges_doubles, scan_msg->range_min, scan_msg->range_max);
 }
 
 } // namespace line_extraction

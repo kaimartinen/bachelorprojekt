@@ -24,6 +24,7 @@ public:
   ~LineExtractionROS();
   // Running
   void run();
+  void extract(std::vector<Line> &lines);
 
 private:
   // ROS
