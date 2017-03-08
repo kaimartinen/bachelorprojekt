@@ -35,6 +35,7 @@ void populateMarkerMsg(std::vector<ellipse::Ellipse> &ellipses, visualization_ms
     marker_msg.points.push_back(p);
     marker_msg.scale.x = ellipses[i].getWidth();
     marker_msg.scale.y = ellipses[i].getHeight();
+    marker_msg.scale.z = 1.0;
   }
   marker_msg.header.frame_id = "base_link";
   marker_msg.header.stamp = ros::Time::now();
@@ -63,7 +64,8 @@ int main(int argc, char **argv) {
     extract_ellipses(lines, ellipses);
     if (lines.size() >= 1 && ellipses.size() >= 1) {
       //ROS_INFO("Amount of start:%lf, %lf", lines[0].getStart()[0], lines[0].getStart()[1]);
-      //ROS_INFO("Amount of start:%lf, %lf", ellipses[0].getStart()[0], ellipses[0].getStart()[1]);
+      ROS_INFO("Amount of start:(%lf, %lf)", ellipses[0].getStart()[0], ellipses[0].getStart()[1]);
+      ROS_INFO("Amount of end:(%lf, %lf)", ellipses[0].getEnd()[0], ellipses[0].getEnd()[1]);
       /*if (ellipses[0].onLine(ellipses[0].getStart())) {
         ROS_INFO("Start: true");
       } else {
