@@ -58,6 +58,20 @@ void LineExtractionROS::extract(std::vector<Line> &lines)
 {
   lines.clear();
   line_extraction_.extractLines(lines);
+
+  std::vector<Line> new_lines;
+
+  for(int i = 0; i < lines.size(); i++) {
+    boost::array<double, 2> start = lines[i].getStart();
+    boost::array<double, 2> end = lines[i].getEnd();
+    double distance_start = sqrt(start[0]*start[0] + start[1]*start[1]);
+    double distance_end = sqrt(end[0]*end[0] + end[1]*end[1]);
+    if(distance_start < 9.99 || distance_end < 9.99) {
+      new_lines.push_back(lines[i]);
+    }
+  }
+
+  lines = new_lines;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

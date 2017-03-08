@@ -47,18 +47,7 @@ void LineExtraction::extractLines(std::vector<Line>& lines)
   }
   mergeLines();
 
-  std::vector<line_extraction::Line> corr_lines;
-
-  for(size_t i = 0; i < lines_.size(); ++i)
-  {
-    // noch dynamich auf max range des scans
-    //ROS_INFO("max range: %lf", lines_[i].ranges_max());
-    if ((int)lines_[i].ranges_max() >= 10) {
-      corr_lines.push_back(lines_[i]);
-    }
-  }
-
-  lines = corr_lines;
+  lines = lines_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
