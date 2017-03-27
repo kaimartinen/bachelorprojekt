@@ -4,11 +4,11 @@
 #include "laser_geometry/laser_geometry.h"
 #include "laser_line_extraction/line_extraction_ros.h"
 #include "laser_line_extraction/line.h"
-#include "ellipse/ellipse.h"
-#include <visualization_msgs/Marker.h>
+#include <ellipse/ellipse_extractor.h>
+//#include <visualization_msgs/Marker.h>
 
 
-void extract_ellipses(std::vector<line_extraction::Line> &lines, std::vector<ellipse::Ellipse> &ellipses) {
+/*void extract_ellipses(std::vector<line_extraction::Line> &lines, std::vector<ellipse::Ellipse> &ellipses) {
   ellipses.clear();
   double width = 2.0;
   for (std::vector<line_extraction::Line>::const_iterator cit = lines.begin();
@@ -40,7 +40,7 @@ void populateMarkerMsg(std::vector<ellipse::Ellipse> &ellipses, visualization_ms
   marker_msg.header.frame_id = "base_link";
   marker_msg.header.stamp = ros::Time::now();
 }
-
+*/
 
 int main(int argc, char **argv) {
   ros::init(argc, argv, "laser_scan_listener");
@@ -48,25 +48,24 @@ int main(int argc, char **argv) {
   ros::NodeHandle nh;
   ros::NodeHandle nh_local("~");
   line_extraction::LineExtractionROS line_extractor(nh, nh_local);
+  ellipse::Ellipse_extractor extractor(nh, nh_local);
 
   double frequency;
   nh_local.param<double>("frequency", frequency, 25);
   ros::Rate rate(frequency);
-  ros::Publisher ellipse_marker = nh.advertise<visualization_msgs::Marker>("ellipse_marker", 1);
 
   std::vector<line_extraction::Line> lines;
-  std::vector<ellipse::Ellipse> ellipses;
   while (ros::ok())
   {
     line_extractor.run();
     line_extractor.extract(lines);
-    ROS_INFO("Amount of lines: %d", ellipses.size());
-    extract_ellipses(lines, ellipses);
-    if (lines.size() >= 1 && ellipses.size() >= 1) {
+    //ROS_INFO("Amount of lines: %d", ellipses.size());
+    extractor.extract(lines);
+    /*if (lines.size() >= 1 && ellipses.size() >= 1) {
       //ROS_INFO("Amount of start:%lf, %lf", lines[0].getStart()[0], lines[0].getStart()[1]);
       ROS_INFO("Amount of start:(%lf, %lf)", ellipses[0].getStart()[0], ellipses[0].getStart()[1]);
       ROS_INFO("Amount of end:(%lf, %lf)", ellipses[0].getEnd()[0], ellipses[0].getEnd()[1]);
-      /*if (ellipses[0].onLine(ellipses[0].getStart())) {
+      if (ellipses[0].onLine(ellipses[0].getStart())) {
         ROS_INFO("Start: true");
       } else {
         ROS_INFO("Start: false");
@@ -75,14 +74,12 @@ int main(int argc, char **argv) {
         ROS_INFO("Start: true");
       } else {
         ROS_INFO("Start: false");
-      }*/
+      }
       ROS_INFO("Middle point: (%lf, %lf)", ellipses[0].getPPoint()[0], ellipses[0].getPPoint()[1]);
       //ROS_INFO("Truth Start: " + ellipses[0].onLine(ellipses[0].getStart()));
       //ROS_INFO("Truth End: " + ellipses[0].onLine(ellipses[0].getEnd()));
-    }
-    visualization_msgs::Marker marker_msg;
-    populateMarkerMsg(ellipses, marker_msg);
-    ellipse_marker.publish(marker_msg);
+    }*/
+    extractor.run(true);
 
     ros::spinOnce();
     rate.sleep();
