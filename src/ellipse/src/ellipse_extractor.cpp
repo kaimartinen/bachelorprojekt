@@ -60,11 +60,11 @@ namespace ellipse_extraction {
       p.y = ellipses_[i].getPPoint()[1];
       p.z = 0;
       ellipse.midpoint = p;
-      ellipse.width = ellipses_[i].width;
-      ellipse.height = ellipses_[i].height;
+      ellipse.width = ellipses_[i].getWidth();
+      ellipse.height = ellipses_[i].getHeight();
       ellipse.p1 = ellipses_[i].getP1();
       ellipse.p2 = ellipses_[i].getP2();
-      ellipse_list.push_back(ellipse);
+      ellipse_list.ellipses.push_back(ellipse);
     }
     ellipse_list.header.frame_id = "base_link";
     ellipse_list.header.stamp = ros::Time::now();
