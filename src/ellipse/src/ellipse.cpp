@@ -1,7 +1,7 @@
 #include "ellipse/ellipse.h"
 #include "laser_line_extraction/line.h"
 
-namespace ellipse
+namespace ellipse_extraction
 {
 
 Ellipse::Ellipse(const line_extraction::Line &line, const double height, const double width):
@@ -51,6 +51,15 @@ double Ellipse::getWidth() {
 double Ellipse::getHeight() {
   return _height;
 }
+
+double Ellipse::getP1() {
+  return _p1;
+}
+
+double Ellipse::getP2() {
+  return _p2;
+}
+
 
 boost::array<double, 2>& Ellipse::getPPoint() {
   return _p_point;

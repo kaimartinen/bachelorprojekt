@@ -3,7 +3,7 @@
 
 #include "laser_line_extraction/line.h"
 
-namespace ellipse
+namespace ellipse_extraction
 {
 
 class Ellipse
@@ -29,6 +29,8 @@ public:
   double  getAngle();
   double  getWidth();
   double  getHeight();
+  double  getP1();
+  double  getP2();
 
   boost::array<double, 2>&  getStart();
   boost::array<double, 2>&  getEnd();

@@ -4,7 +4,7 @@
 #include <laser_line_extraction/line.h>
 #include <visualization_msgs/Marker.h>
 
-namespace ellipse {
+namespace ellipse_extraction {
 
   Ellipse_extractor::Ellipse_extractor(ros::NodeHandle& nh, ros::NodeHandle& nh_local):
   nh_(nh),
@@ -23,11 +23,11 @@ namespace ellipse {
     double width = 2.0;
     for (std::vector<line_extraction::Line>::const_iterator cit = lines.begin();
          cit != lines.end(); ++cit) {
-      ellipses_.push_back(ellipse::Ellipse(*cit, (cit->length() / 2), width));
+      ellipses_.push_back(ellipse_extraction::Ellipse(*cit, (cit->length() / 2), width));
     }
   }
 
-  void Ellipse_extractor::populateMarkerMsg(visualization_msgs::Marker &marker_msg)
+  void Ellipse_extractor::populateMarkerMsg(visualization_msgs::Marker& marker_msg)
   {
     marker_msg.ns = "ellipse_extraction";
     marker_msg.id = 0;
@@ -51,7 +51,26 @@ namespace ellipse {
     marker_msg.header.stamp = ros::Time::now();
   }
 
+  void Ellipse::populateEllipseListMsg(ellipse::EllipseList& ellipse_list) {
+    for (int i = 0; i < ellipses_.size(); i++)
+    {
+      ellipse::EllipseSeg ellipse;
+      ellipse.midpoint[0] = ellipses_[i].getPPoint()[0];
+      ellipse.midpoint[1] = ellipses_[i].getPPoint()[1];
+      ellipse.midpoint[2] = 0;
+      ellipse.midpoint = p;
+      ellipse.width = ellipses_[i].width;
+      ellipse.height = ellipses_[i].height;
+      ellipse.p1 = ellipses_[i].getP1();
+      ellipse.p2 = ellipses_[i].getP2();
+      ellipse_list.push_back(ellipse);
+    }
+    ellipse_list.header.frame_id = "base_link";
+    ellipse_list.header.stamp = ros::Time::now();
+  }
+
   void Ellipse_extractor::run(bool visual){
+    ellipse::EllipseList ellipses;
 
     if (visual) {
       visualization_msgs::Marker marker_msg;
