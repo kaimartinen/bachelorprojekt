@@ -51,7 +51,7 @@ namespace ellipse_extraction {
     marker_msg.header.stamp = ros::Time::now();
   }
 
-  void Ellipse::populateEllipseListMsg(ellipse::EllipseList& ellipse_list) {
+  void Ellipse_extractor::populateEllipseListMsg(ellipse::EllipseList& ellipse_list) {
     for (int i = 0; i < ellipses_.size(); i++)
     {
       ellipse::EllipseSeg ellipse;

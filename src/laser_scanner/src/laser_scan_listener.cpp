@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
   ros::NodeHandle nh;
   ros::NodeHandle nh_local("~");
   line_extraction::LineExtractionROS line_extractor(nh, nh_local);
-  ellipse::Ellipse_extractor extractor(nh, nh_local);
+  ellipse_extraction::Ellipse_extractor extractor(nh, nh_local);
 
   double frequency;
   nh_local.param<double>("frequency", frequency, 25);
