@@ -55,9 +55,10 @@ namespace ellipse_extraction {
     for (int i = 0; i < ellipses_.size(); i++)
     {
       ellipse::EllipseSeg ellipse;
-      ellipse.midpoint[0] = ellipses_[i].getPPoint()[0];
-      ellipse.midpoint[1] = ellipses_[i].getPPoint()[1];
-      ellipse.midpoint[2] = 0;
+      geometry_msgs::Point p;
+      p.x = ellipses_[i].getPPoint()[0];
+      p.y = ellipses_[i].getPPoint()[1];
+      p.z = 0;
       ellipse.midpoint = p;
       ellipse.width = ellipses_[i].width;
       ellipse.height = ellipses_[i].height;
