@@ -6,7 +6,7 @@ namespace ellipse_extraction
 
 Ellipse::Ellipse(const line_extraction::Line &line, const double height, const double width):
   _line(line),
-  _height(height + 0.2),
+  _height(height + 0.5),
   _width(width),
   _p1(1.5),
   _p2(2.0)
@@ -15,7 +15,10 @@ Ellipse::Ellipse(const line_extraction::Line &line, const double height, const d
   boost::array<double, 2> norm = {{(_line.getEnd()[0] - _line.getStart()[0]) / norm_length, (_line.getEnd()[1] - _line.getStart()[1]) / norm_length}};
   _start = {{norm[0] * 0.2 + _line.getStart()[0], norm[1] * 0.2 + _line.getStart()[1]}};
   _end = {{norm[0] * (-1) * (0.2 + line.length()) + _line.getStart()[0], norm[1] * (-1) * (0.2 + line.length()) + _line.getStart()[1]}};
-  _p_point = {{norm[0] * (line.length() / 2) + _line.getEnd()[0], norm[1] * (line.length() / 2) + _line.getEnd()[1]}};
+  // _p_point = {{norm[0] * (line.length() / 2) + _line.getEnd()[0], norm[1] * (line.length() / 2) + _line.getEnd()[1]}};
+  _p_point = {{(_line.getStart()[0] + _line.getEnd()[0])/2, (_line.getStart()[1] + _line.getEnd()[1])/2}};
+  // _alpha = acos((_line.getStart()[0] - _line.getEnd()[0])/norm_length);
+  _alpha = -atan2(_line.getStart()[1] - _line.getEnd()[1], _line.getStart()[0] - _line.getEnd()[0]);
 }
 
 Ellipse::~Ellipse()
@@ -60,6 +63,9 @@ double Ellipse::getP2() {
   return _p2;
 }
 
+double Ellipse::getAlpha() {
+  return _alpha;
+}
 
 boost::array<double, 2>& Ellipse::getPPoint() {
   return _p_point;

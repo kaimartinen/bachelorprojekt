@@ -15,6 +15,7 @@ private:
   double _width;
   double _p1;
   double _p2;
+  double _alpha;
 
   boost::array<double, 2>  _start;
   boost::array<double, 2>  _end;
@@ -31,6 +32,7 @@ public:
   double  getHeight();
   double  getP1();
   double  getP2();
+  double  getAlpha();
 
   boost::array<double, 2>&  getStart();
   boost::array<double, 2>&  getEnd();

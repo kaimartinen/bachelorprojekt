@@ -124,13 +124,13 @@ catkin_package(
 # include_directories(include)
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-add_library(ellipse src/ellipse.cpp)
+#add_library(ellipse src/ellipse.cpp)
+#target_link_libraries(ellipse ${catkin_LIBRARIES})
+
+add_library(ellipse src/ellipse.cpp src/ellipse_extractor.cpp)
 target_link_libraries(ellipse ${catkin_LIBRARIES})
 
-add_library(ellipse_extractor src/ellipse_extractor.cpp)
-target_link_libraries(ellipse_extractor ${catkin_LIBRARIES})
-
-add_dependencies(ellipse_extractor ellipse_extractor_generate_messages_cpp)
+add_dependencies(ellipse ellipse_extractor_generate_messages_cpp)
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}

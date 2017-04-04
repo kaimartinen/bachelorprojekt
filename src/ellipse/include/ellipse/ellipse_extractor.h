@@ -7,6 +7,7 @@
 #include "laser_line_extraction/line.h"
 #include <ros/ros.h>
 #include <visualization_msgs/Marker.h>
+#include <visualization_msgs/MarkerArray.h>
 
 namespace ellipse_extraction
 {
@@ -21,7 +22,7 @@ private:
   ros::NodeHandle nh_local_;
   std::vector<ellipse_extraction::Ellipse> ellipses_;
 
-  void populateMarkerMsg(visualization_msgs::Marker& marker_msg);
+  void populateMarkerMsg(visualization_msgs::MarkerArray& marker_msg);
   void populateEllipseListMsg(ellipse::EllipseList& ellipse_list);
 
 public:
