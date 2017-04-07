@@ -33,6 +33,7 @@ public:
   double  getP1();
   double  getP2();
   double  getAlpha();
+  line_extraction::Line getLine();
 
   boost::array<double, 2>&  getStart();
   boost::array<double, 2>&  getEnd();

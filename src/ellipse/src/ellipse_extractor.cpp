@@ -3,6 +3,7 @@
 #include <ellipse/ellipse.h>
 #include <laser_line_extraction/line.h>
 #include <visualization_msgs/Marker.h>
+#include <boost/array.hpp>
 
 namespace ellipse_extraction {
 
@@ -20,7 +21,7 @@ namespace ellipse_extraction {
 
   void Ellipse_extractor::extract(std::vector<line_extraction::Line> &lines) {
     ellipses_.clear();
-    double width = 0.5;
+    double width = 0.4;
     for (std::vector<line_extraction::Line>::const_iterator cit = lines.begin();
          cit != lines.end(); ++cit) {
       ellipses_.push_back(ellipse_extraction::Ellipse(*cit, (cit->length() / 2), width));
@@ -41,11 +42,6 @@ namespace ellipse_extraction {
     marker_msg.header.stamp = ros::Time::now();
     for (int i = 0; i < ellipses_.size(); i++)
     {
-      // geometry_msgs::Point p;
-      // p.x = ellipses_[i].getPPoint()[0];
-      // p.y = ellipses_[i].getPPoint()[1];
-      // p.z = 0;
-      // marker_msg.points.push_back(p);
       marker_msg.id = i;
       marker_msg.pose.position.x = ellipses_[i].getPPoint()[0];
       marker_msg.pose.position.y = ellipses_[i].getPPoint()[1];
@@ -65,22 +61,25 @@ namespace ellipse_extraction {
     for (int i = 0; i < ellipses_.size(); i++)
     {
       ellipse::EllipseSeg ellipse;
-      geometry_msgs::Point p;
-      p.x = ellipses_[i].getPPoint()[0];
-      p.y = ellipses_[i].getPPoint()[1];
-      p.z = 0;
-      ellipse.midpoint = p;
+      laser_line_extraction::LineSegment line;
+      line.radius = ellipses_[i].getLine().getRadius();
+      line.angle =  ellipses_[i].getLine().getAngle();
+      line.covariance =  ellipses_[i].getLine().getCovariance();
+      line.start =  ellipses_[i].getLine().getStart();
+      line.end =  ellipses_[i].getLine().getEnd();
+      ellipse.line = line;
       ellipse.width = ellipses_[i].getWidth();
       ellipse.height = ellipses_[i].getHeight();
       ellipse.p1 = ellipses_[i].getP1();
       ellipse.p2 = ellipses_[i].getP2();
       ellipse_list.ellipses.push_back(ellipse);
     }
+    ellipse_list.size = ellipses_.size();
     ellipse_list.header.frame_id = "base_link";
     ellipse_list.header.stamp = ros::Time::now();
   }
 
-  void Ellipse_extractor::run(bool visual){
+  void Ellipse_extractor::publish(bool visual){
     ellipse::EllipseList ellipses;
     populateEllipseListMsg(ellipses);
     ellipse_publisher_.publish(ellipses);
@@ -90,6 +89,26 @@ namespace ellipse_extraction {
       populateMarkerMsg(marker_msg);
       ellipse_marker_.publish(marker_msg);
     }
+  }
+
+  void Ellipse_extractor::extract_from_msg(ellipse::EllipseList& ellipse_list) {
+    ellipses_.clear();
+    for(size_t i = 0; i < ellipse_list.size; i++) {
+      laser_line_extraction::LineSegment line_seg = ellipse_list.ellipses[i].line;
+      boost::array<double, 4> cov = {line_seg.covariance[0], line_seg.covariance[1],
+                                     line_seg.covariance[2], line_seg.covariance[3]};
+      boost::array<double, 2> start ={line_seg.start[0], line_seg.start[1]};
+      boost::array<double, 2> end ={line_seg.end[0], line_seg.end[1]};
+      //problem with indices calc
+      std::vector<unsigned int> indices = {};
+      line_extraction::Line line(line_seg.angle, line_seg.radius,
+                                 cov, start, end, indices);
+      ellipses_.push_back(ellipse_extraction::Ellipse(line, ellipse_list.ellipses[i].height, ellipse_list.ellipses[i].width));
+    }
+  }
+
+  std::vector<ellipse_extraction::Ellipse> Ellipse_extractor::getEllipses() {
+    return ellipses_;
   }
 
 }

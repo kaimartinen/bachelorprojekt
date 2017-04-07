@@ -29,7 +29,10 @@ public:
   Ellipse_extractor(ros::NodeHandle &nh, ros::NodeHandle &nh_local);
   ~Ellipse_extractor();
   void extract(std::vector<line_extraction::Line> &lines);
-  void run(bool visual);
+  void publish(bool visual);
+
+  std::vector<ellipse_extraction::Ellipse> getEllipses();
+  void extract_from_msg(ellipse::EllipseList& ellipse_list);
 };
 
 }

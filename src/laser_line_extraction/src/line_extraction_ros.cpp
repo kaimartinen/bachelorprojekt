@@ -15,7 +15,6 @@ LineExtractionROS::LineExtractionROS(ros::NodeHandle& nh, ros::NodeHandle& nh_lo
   data_cached_(false)
 {
   loadParameters();
-  //ROS_INFO("%s\n", scan_topic_.c_str());
   line_publisher_ = nh_.advertise<laser_line_extraction::LineSegmentList>("line_segments", 1);
   scan_subscriber_ = nh_.subscribe(scan_topic_, 1, &LineExtractionROS::laserScanCallback, this);
   pub_markers_ = true;
